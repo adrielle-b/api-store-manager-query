@@ -24,5 +24,5 @@ describe('Testes de sales - SALES MODEL', function () {
 
     afterEach(function () {
         sinon.restore();
-      });
+    });
 });
