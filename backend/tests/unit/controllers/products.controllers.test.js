@@ -1,7 +1,7 @@
 const chai = require('chai');
 const sinon = require('sinon');
 const sinonChai = require('sinon-chai');
-const { productServices, saleServices } = require('../../../src/services');
+const { productServices } = require('../../../src/services');
 const { productsFromService, productsFromModel, productFromService, productByIdFromModel, productFromServiceNotFound } = require('../mocks/products.mock');
 const { productsController } = require('../../../src/controllers');
 
@@ -38,7 +38,7 @@ describe('Testes de products - PRODUCTS CONTROLLERS', function () {
     });
   
   it('Não busca product com id inexistente', async function () {
-      sinon.stub(saleServices, 'findById').resolves(productFromServiceNotFound);
+      sinon.stub(productServices, 'findById').resolves(productFromServiceNotFound);
   
       const req = { params: { id: 10 }, body: { } };
       const res = {
@@ -50,6 +50,21 @@ describe('Testes de products - PRODUCTS CONTROLLERS', function () {
       expect(res.status).to.have.been.calledWith(404);
       expect(res.json).to.have.been.calledWith(productFromServiceNotFound.data);
     });
+  
+  it('Inserindo um produto com sucesso', async function () {
+    const resultService = { status: 'CREATED', data: { id: 4, name: 'produtoX' } };
+    sinon.stub(productServices, 'insert').resolves(resultService);
+
+    const req = { params: { id: 4 }, body: { name: 'produtoX' } };
+    const res = {
+        status: sinon.stub().returnsThis(),
+        json: sinon.stub(),
+    };
+
+    await productsController.insertProduct(req, res);
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith(resultService.data);
+  });
 
 afterEach(function () {
     sinon.restore();

@@ -21,7 +21,25 @@ describe('Testes de products - PRODUCTS SERVICES', function () {
         expect(resultService.data).to.deep.equal(productByIdFromModel);
     });
 
-afterEach(function () {
+    it('Inserindo um produto com sucesso', async function () {
+        const insertId = 4;
+        const produto = { id: 4, name: 'ProdutoX' };
+        sinon.stub(productsModel, 'insert').resolves(insertId);
+        sinon.stub(productsModel, 'findById').resolves(produto);
+
+        const resultService = await productServices.insert(produto);
+        expect(resultService.status).to.be.equal('CREATED');
+        expect(resultService.data).to.deep.equal(produto);
+    });
+
+    it('Não insere produto se o tamanho do campo "name" for menor que 5 caracteres', async function () {
+        const produto = { id: 4, name: 'pro' };
+        const responseService = await productServices.insert(produto);
+        expect(responseService.status).to.equal('INVALID_VALUE');
+        expect(responseService.data).to.deep.equal({ message: '"name" length must be at least 5 characters long' });
+    });
+
+    afterEach(function () {
     sinon.restore();
 });
 });
