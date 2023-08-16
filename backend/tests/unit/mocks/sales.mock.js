@@ -83,6 +83,22 @@ const saleFromServiceNotFound = {
   data: { message: 'Sale not found' },
 };
 
+const newSalesFromModel = [
+  {
+    productId: 1,
+    quantity: 1,
+  },
+  {
+    productId: 2,
+    quantity: 5,
+  },
+];
+
+const newSalesFromServices = {
+  status: 'CREATED',
+  data: { id: 10, itemsSold: newSalesFromModel },
+};
+
 module.exports = {
   salesFromDB,
   saleFromDB,
@@ -91,4 +107,6 @@ module.exports = {
   salesFromServices,
   saleFromServices,
   saleFromServiceNotFound,
+  newSalesFromModel,
+  newSalesFromServices,
 };
