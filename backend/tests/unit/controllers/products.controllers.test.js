@@ -66,6 +66,19 @@ describe('Testes de products - PRODUCTS CONTROLLERS', function () {
     expect(res.json).to.have.been.calledWith(resultService.data);
   });
 
+  it('Atualizando product por id com sucesso', async function () {
+    sinon.stub(productServices, 'update').resolves(productFromService);
+    const req = { params: { id: 1 }, body: { name: 'Martelo do Batman' } };
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.updateProduct(req, res);
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(productByIdFromModel);
+  });
+
 afterEach(function () {
     sinon.restore();
 });

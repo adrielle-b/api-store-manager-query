@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const { productsModel } = require('../../../src/models');
-const { productsFromModel, productByIdFromModel } = require('../mocks/products.mock');
+const { productsFromModel, productByIdFromModel, updateFromDB } = require('../mocks/products.mock');
 const { productServices } = require('../../../src/services');
 
 describe('Testes de products - PRODUCTS SERVICES', function () {
@@ -34,10 +34,45 @@ describe('Testes de products - PRODUCTS SERVICES', function () {
 
     it('Não insere produto se o tamanho do campo "name" for menor que 5 caracteres', async function () {
         const produto = { id: 4, name: 'pro' };
-        const responseService = await productServices.insert(produto);
-        expect(responseService.status).to.equal('INVALID_VALUE');
-        expect(responseService.data).to.deep.equal({ message: '"name" length must be at least 5 characters long' });
+        const resultService = await productServices.insert(produto);
+        expect(resultService.status).to.equal('INVALID_VALUE');
+        expect(resultService.data).to.deep.equal({ message: '"name" length must be at least 5 characters long' });
     });
+
+    it('Atualizando product com sucesso', async function () {
+        sinon.stub(productsModel, 'findById')
+          .onFirstCall()
+          .resolves(productByIdFromModel)
+          .onSecondCall()
+          .resolves(productByIdFromModel);
+        sinon.stub(productsModel, 'update').resolves(updateFromDB);
+    
+        const productId = 1;
+        const productUpdate = { name: 'Martelo do Batman' };
+        const resultService = await productServices.update(productUpdate, productId);
+    
+        expect(resultService.status).to.equal('SUCCESSFUL');
+        expect(resultService.data).to.deep.equal(productByIdFromModel);
+      });
+    
+      it('Não atualiza product se o tamanho do campo "name" for menor que 5 caracteres', async function () {
+        sinon.stub(productsModel, 'findById')
+          .resolves(undefined);
+    
+        const productId = 1;
+        const productUpdate = { name: 'Martelo do Batman' };
+        const resultService = await productServices.update(productUpdate, productId);
+        expect(resultService.status).to.equal('NOT_FOUND');
+        expect(resultService.data).to.deep.equal({ message: 'Product not found' });
+      });
+    
+      it('Não altera product se o id recebido não existir', async function () {
+        const productId = 10;
+        const productUpdate = { name: 'Produto' };
+        const resultService = await productServices.update(productUpdate, productId);
+        expect(resultService.status).to.equal('NOT_FOUND');
+        expect(resultService.data).to.deep.equal({ message: 'Product not found' });
+      });
 
     afterEach(function () {
     sinon.restore();

@@ -43,6 +43,19 @@ const productFromServiceNotFound = {
     status: 'NOT_FOUND', 
     data: { message: 'Product not found' },
 };
+
+const updateFromDB = [
+    {
+      fieldCount: 0,
+      affectedRows: 1,
+      insertId: 0,
+      info: 'Rows matched: 1  Changed: 1  Warnings: 0',
+      serverStatus: 2,
+      warningStatus: 0,
+      changedRows: 1,
+    },
+    undefined,
+  ];
   
 module.exports = {
     productsFromDB,
@@ -52,4 +65,5 @@ module.exports = {
     productsFromService,
     productFromService,
     productFromServiceNotFound,
+    updateFromDB,
 };
