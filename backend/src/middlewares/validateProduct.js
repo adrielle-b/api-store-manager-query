@@ -6,7 +6,7 @@ const validateProduct = (req, res, next) => {
   const error = checkRequiredFields(body, requiredProductFields);
 
   if (error) return res.status(400).json({ message: error });
-  next();
+  return next();
 };
 
 module.exports = {

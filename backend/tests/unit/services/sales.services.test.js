@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { salesModel } = require('../../../src/models');
+const { salesModel, productsModel } = require('../../../src/models');
 const { salesFromModel, saleFromModel, newSalesFromModel, newSalesFromServices } = require('../mocks/sales.mock');
 const { saleServices } = require('../../../src/services');
 
@@ -26,10 +26,32 @@ describe('Testes de sales - SALES SERVICES', function () {
         sinon.stub(salesModel, 'insert').resolves(saleId);
         sinon.stub(salesModel, 'findById').resolves(newSalesFromModel);
     
-        const responseService = await saleServices.insert(newSalesFromModel);
+        const resultService = await saleServices.insert(newSalesFromModel);
     
-        expect(responseService.status).to.equal('CREATED');
-        expect(responseService.data).to.deep.equal(newSalesFromServices.data);
+        expect(resultService.status).to.equal('CREATED');
+        expect(resultService.data).to.deep.equal(newSalesFromServices.data);
+      });
+    
+      it('Não insere sale se quantity for menor que 1', async function () {
+        const saleMock = [
+          { productId: 1, quantity: 0 },
+        ];
+        const resultService = await saleServices.insert(saleMock);
+    
+        expect(resultService.status).to.equal('INVALID_VALUE');
+        expect(resultService.data).to.deep.equal({ message: '"quantity" must be greater than or equal to 1' });
+      });
+    
+      it('Não insere sale se productId for inválido', async function () {
+        sinon.stub(productsModel, 'findById').resolves(undefined);
+    
+        const saleMock = [
+          { productId: 10, quantity: 1 },
+        ];
+        const resultService = await saleServices.insert(saleMock);
+    
+        expect(resultService.status).to.equal('NOT_FOUND');
+        expect(resultService.data).to.deep.equal({ message: 'Product not found' });
       });
 
 afterEach(function () {
