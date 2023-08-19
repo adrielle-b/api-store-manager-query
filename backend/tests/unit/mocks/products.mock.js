@@ -56,6 +56,18 @@ const updateFromDB = [
     },
     undefined,
   ];
+
+  const deleteFromDB = [
+    {
+      fieldCount: 0,
+      affectedRows: 1,
+      insertId: 0,
+      info: '',
+      serverStatus: 2,
+      warningStatus: 0,
+    },
+    undefined,
+  ];
   
 module.exports = {
     productsFromDB,
@@ -66,4 +78,5 @@ module.exports = {
     productFromService,
     productFromServiceNotFound,
     updateFromDB,
+    deleteFromDB,
 };

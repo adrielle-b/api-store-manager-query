@@ -36,9 +36,17 @@ const update = async (product, id) => {
     return { status: 'SUCCESSFUL', data: productUpdate };
 };
 
+const exclui = async (id) => {
+    const [{ affectedRows }] = await productsModel.exclui(id);
+    if (affectedRows === 0) return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
+  
+    return { status: 'DELETE', data: undefined };
+};
+
 module.exports = {
     findAll,
     findById,
     insert,
     update,
+    exclui,
 };

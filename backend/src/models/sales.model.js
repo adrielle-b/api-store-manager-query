@@ -24,9 +24,8 @@ const findById = async (saleId) => {
 };
 
 const insert = async (sales) => {
-  const data = new Date();
-  const querySales = 'INSERT INTO sales (date) VALUES (?)';
-  const [{ insertId }] = await connection.execute(querySales, [data]);
+  const querySales = 'INSERT INTO sales (date) VALUES (CURRENT_TIMESTAMP)';
+  const [{ insertId }] = await connection.execute(querySales);
 
   const querySalesPr = 'INSERT INTO sales_products (sale_id, product_id, quantity) VALUES (?,?,?);';
   const promises = sales 

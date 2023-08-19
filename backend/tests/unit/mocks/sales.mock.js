@@ -84,14 +84,8 @@ const saleFromServiceNotFound = {
 };
 
 const newSalesFromModel = [
-  {
-    productId: 1,
-    quantity: 1,
-  },
-  {
-    productId: 2,
-    quantity: 5,
-  },
+  { date: '2023-08-14T21:51:46.000Z', productId: 1, quantity: 5 },
+  { date: '2023-08-14T21:51:46.000Z', productId: 2, quantity: 10 },
 ];
 
 const newSalesFromServices = {

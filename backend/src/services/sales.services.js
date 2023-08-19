@@ -28,7 +28,9 @@ const salesVerifyJoi = (sales) => {
     for (let i = 0; i < sales.length; i += 1) {
         const sale = sales[i];
         const { error } = saleValidation.validate(sale);
-        if (error) return { status: 'INVALID_VALUE', message: error.message };
+        if (error) {
+            return { status: 'INVALID_VALUE', message: error.message };
+        }
     }  
 };
 

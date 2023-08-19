@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 const { productsModel } = require('../../../src/models');
-const { productsFromModel, productByIdFromModel, updateFromDB } = require('../mocks/products.mock');
+const { productsFromModel, productByIdFromModel, updateFromDB, deleteFromDB } = require('../mocks/products.mock');
 const { productServices } = require('../../../src/services');
 
 describe('Testes de products - PRODUCTS SERVICES', function () {
@@ -74,6 +74,25 @@ describe('Testes de products - PRODUCTS SERVICES', function () {
         expect(resultService.data).to.deep.equal({ message: 'Product not found' });
       });
 
+      it('Deleta product com sucesso', async function () {
+        sinon.stub(productsModel, 'exclui').resolves(deleteFromDB);
+    
+        const idMockd = 4;
+        const resultService = await productServices.exclui(idMockd);
+    
+        expect(resultService.status).to.equal('DELETE');
+        expect(resultService.data).to.be.equal(undefined);
+      });
+    
+      it('Não deleta product se id não existir', async function () {
+        sinon.stub(productsModel, 'findById').resolves(undefined);
+    
+        const productId = 4;
+        const resultService = await productServices.exclui(productId);
+    
+        expect(resultService.status).to.equal('NOT_FOUND');
+        expect(resultService.data).to.deep.equal({ message: 'Product not found' });
+      });
     afterEach(function () {
     sinon.restore();
 });
